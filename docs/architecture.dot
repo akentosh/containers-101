@@ -1,0 +1,84 @@
+digraph dockerComposeGraph {
+	compound=true;
+	rankdir=LR;
+	ranksep=1.2;
+	graph [style="filled,rounded", nodesep=0.3];
+
+	graph [fillcolor=moccasin];
+	subgraph cluster_hostports {
+		node [shape=circle];
+		"3000";
+	}
+	graph [fillcolor=moccasin];
+	subgraph cluster_hostvolumes {
+		node [shape=tab];
+		"host_./uploads" [label="./uploads"];
+		"host_./log" [label="./log"];
+		"host_/tmp/asciinema-web" [label="/tmp/asciinema-web"];
+		"host_./volumes/cache" [label="./volumes/cache"];
+		"host_./volumes/postgres" [label="./volumes/postgres"];
+		"host_./volumes/redis" [label="./volumes/redis"];
+	}
+	graph [fillcolor=moccasin];
+	subgraph cluster_hostenvfiles {
+		node [shape=note];
+		".env.production";
+	}
+
+	subgraph cluster_composeContainers {
+	graph [fillcolor=lightyellow]	subgraph cluster_smtp {
+	graph [fillcolor=white]		{
+			node [fontname="times-bold",shape=plaintext];
+			"smtp";
+		}
+	}
+	subgraph cluster_web {
+	graph [fillcolor=white]		{
+			node [fontname="times-bold",shape=plaintext];
+			"web";
+		}
+		{
+			node [shape=tab];
+			"web_/app/uploads" [label="/app/uploads"];
+			"web_/app/log" [label="/app/log"];
+			"web_/tmp" [label="/tmp"];
+			"web_/cache" [label="/cache"];
+		}
+	}
+	subgraph cluster_postgres {
+	graph [fillcolor=white]		{
+			node [fontname="times-bold",shape=plaintext];
+			"postgres";
+		}
+		{
+			node [shape=tab];
+			"postgres_/var/lib/postgresql/data" [label="/var/lib/postgresql/data"];
+		}
+	}
+	subgraph cluster_redis {
+	graph [fillcolor=white]		{
+			node [fontname="times-bold",shape=plaintext];
+			"redis";
+		}
+		{
+			node [shape=tab];
+			"redis_/data" [label="/data"];
+		}
+	}
+	}
+
+
+	"smtp" -> ".env.production" [ltail=cluster_smtp];
+	"3000" -> "web" [label="80", lhead=cluster_web];
+	"web" -> "redis" [ltail=cluster_web, lhead=cluster_redis];
+	"web" -> "postgres" [ltail=cluster_web, lhead=cluster_postgres];
+	"web" -> "smtp" [ltail=cluster_web, lhead=cluster_smtp];
+	"web" -> ".env.production" [ltail=cluster_web];
+	"web_/app/uploads" -> "host_./uploads";
+	"web_/app/log" -> "host_./log";
+	"web_/tmp" -> "host_/tmp/asciinema-web";
+	"web_/cache" -> "host_./volumes/cache";
+	"postgres_/var/lib/postgresql/data" -> "host_./volumes/postgres";
+	"redis_/data" -> "host_./volumes/redis";
+
+}

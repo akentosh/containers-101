@@ -1,1 +1,8 @@
-site_name: Cardinal Container 101
+site_name: Container 101
+
+pages:
+    - 'Introduction': 'index.md'
+    - 'Getting Started': 'ramp-up.md'
+    - 'Configure Lab': 'setup.md'
+    - 'Application Overview': 'overview.md'
+    - 'Application Deploy': 'deploy.md'
