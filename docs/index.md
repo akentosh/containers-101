@@ -1,4 +1,4 @@
-# Advizex Container Boot Camp
+# AdvizeX Container Boot Camp
 
 This boot camp can be used in pre-sales and delivery engagements.
 
